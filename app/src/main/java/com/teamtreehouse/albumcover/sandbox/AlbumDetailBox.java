@@ -9,22 +9,22 @@ import com.jimulabs.mirrorsandbox.MirrorSandboxBase;
 import com.teamtreehouse.albumcover.R;
 
 import butterknife.ButterKnife;
-import butterknife.Bind;
+import butterknife.BindView;
 
 /**
  * Created by lintonye on 15-10-07.
  */
 public class AlbumDetailBox extends MirrorSandboxBase {
 
-    @Bind(R.id.album_art)
+    @BindView(R.id.album_art)
     ImageView albumArtView;
-    @Bind(R.id.fab)
+    @BindView(R.id.fab)
     ImageButton fab;
-    @Bind(R.id.title_panel)
+    @BindView(R.id.title_panel)
     ViewGroup cyanPanel;
-    @Bind(R.id.track_panel)
+    @BindView(R.id.track_panel)
     ViewGroup whitePanel;
-    @Bind(R.id.detail_container)
+    @BindView(R.id.detail_container)
     ViewGroup detailContainer;
 
     public AlbumDetailBox(View rootView) {

@@ -1,13 +1,21 @@
 package com.teamtreehouse.albumcover;
 
+import android.animation.Animator;
+import android.animation.AnimatorInflater;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.RequiresApi;
+import android.support.v4.app.SupportActivity;
 import android.support.v7.graphics.Palette;
 import android.transition.ChangeBounds;
+import android.transition.Explode;
 import android.transition.Fade;
 import android.transition.Scene;
 import android.transition.Slide;
@@ -17,13 +25,15 @@ import android.transition.TransitionSet;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import com.teamtreehouse.albumcover.transitions.Fold;
 import com.teamtreehouse.albumcover.transitions.Scale;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -32,16 +42,17 @@ public class AlbumDetailActivity extends Activity {
 
     public static final String EXTRA_ALBUM_ART_RESID = "EXTRA_ALBUM_ART_RESID";
 
-    @Bind(R.id.album_art) ImageView albumArtView;
-    @Bind(R.id.fab) ImageButton fab;
-    @Bind(R.id.title_panel) ViewGroup titlePanel;
-    @Bind(R.id.track_panel) ViewGroup trackPanel;
-    @Bind(R.id.detail_container) ViewGroup detailContainer;
+    @BindView(R.id.album_art) ImageView albumArtView;
+    @BindView(R.id.fab) ImageButton fab;
+    @BindView(R.id.title_panel) ViewGroup titlePanel;
+    @BindView(R.id.track_panel) ViewGroup trackPanel;
+    @BindView(R.id.detail_container) ViewGroup detailContainer;
 
     private TransitionManager mTransitionManager;
     private Scene mExpandedScene;
     private Scene mCollapsedScene;
     private Scene mCurrentScene;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,9 +107,10 @@ public class AlbumDetailActivity extends Activity {
     }
 
     private void setupTransitions() {
-//        Slide slide = new Slide(Gravity.BOTTOM);
+//        Slide slide = new Slide(Gravity.LEFT);
 //        slide.excludeTarget(android.R.id.statusBarBackground, true);
-//        getWindow().setEnterTransition(slide);
+//        getWindow().setEnterTransition(new Slide(Gravity.RIGHT));
+///       getWindow().setReturnTransition(new Explode());
 //        getWindow().setSharedElementsUseOverlay(false);
 
         mTransitionManager = new TransitionManager();
@@ -157,15 +169,22 @@ public class AlbumDetailActivity extends Activity {
         mTransitionManager.setTransition(mCollapsedScene, mExpandedScene, expandTransitionSet);
         mCollapsedScene.enter();
 
-//        postponeEnterTransition();
+        //postponeEnterTransition();
     }
 
     private void populate() {
-        int albumArtResId = getIntent().getIntExtra(EXTRA_ALBUM_ART_RESID, R.drawable.mean_something_kinder_than_wolves);
-        albumArtView.setImageResource(albumArtResId);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                int albumArtResId = getIntent().getIntExtra(EXTRA_ALBUM_ART_RESID, R.drawable.mean_something_kinder_than_wolves);
+                albumArtView.setImageResource(albumArtResId);
 
-        Bitmap albumBitmap = getReducedBitmap(albumArtResId);
-        colorizeFromImage(albumBitmap);
+                Bitmap albumBitmap = getReducedBitmap(albumArtResId);
+                colorizeFromImage(albumBitmap);
+
+                //startPostponedEnterTransition();
+            }
+        }, 1000);
     }
 
     private Bitmap getReducedBitmap(int albumArtResId) {
